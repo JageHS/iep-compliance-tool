@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoMSLawK Wiki | Dynamic IEP Compliance Module</title>
+    <style>
+        /* --- General Page Styling --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f7f9;
+            margin: 0;
+            display: flex;
+        }
+        .main-container {
+            display: flex;
+            width: 100%;
+        }
+        /* --- Sidebar Navigation --- */
+        .sidebar-nav {
+            width: 220px;
+            background-color: #1a3b5d;
+            color: white;
+            padding: 20px;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+        }
+        .sidebar-nav h2 {
+            color: white;
+            text-align: center;
+            border-bottom: 1px solid #4a6a8b;
+            padding-bottom: 15px;
+        }
+        .sidebar-nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-nav li button {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #e1e8ed;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 4px;
+        }
+        .sidebar-nav li button.active, .sidebar-nav li button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* --- Main Content Area --- */
+        .content-area {
+            margin-left: 260px; /* Sidebar width + padding */
+            padding: 20px;
+            width: calc(100% - 260px);
+        }
+        .iep-section {
+            display: none; /* Hidden by default */
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .iep-section.active {
+            display: block;
+        }
+        h3 { color: #1a3b5d; border-bottom: 2px solid #e1e8ed; padding-bottom: 10px;}
+        label { font-weight: bold; display: block; margin: 15px 0 5px; color: #50667b; }
+        input[type="text"], input[type="date"], input[type="number"], textarea, select {
+            width: 100%; padding: 10px; border: 1px solid #ccd6dd; border-radius: 4px; font-size: 1em; box-sizing: border-box;
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        button.primary { background-color: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 5px; font-size: 1em; cursor: pointer; transition: background-color 0.2s; }
+        button.primary:hover { background-color: #0056b3; }
+        .compliance-note { font-size: 0.9em; color: #657786; margin-top: 5px; }
+        
+        /* --- Specific Component Styles --- */
+        .callout { padding: 15px; margin-top: 15px; border-left: 5px solid #ffc107; background-color: #fff3cd; border-radius: 4px;}
+        .callout.best-practice { border-left-color: #28a745; background-color: #eaf6ec;}
+        .alert-danger { padding: 15px 20px; margin: 20px 0; border: 1px solid transparent; border-radius: 5px; color: #a94442; background-color: #f2dede; border-color: #ebccd1; }
+        #audit-report { border: 2px solid #dc3545; background: #f8d7da; padding: 15px; margin-top: 20px;}
+        #audit-report ul { margin: 0; padding-left: 20px; }
+        .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <nav class="sidebar-nav">
+            <h2>IEP Module</h2>
+            <ul>
+                <li><button class="nav-btn active" onclick="showSection('info')">1. Meeting & Child Info</button></li>
+                <li><button class="nav-btn" onclick="showSection('disability')">2. Disability & Adverse Effect</button></li>
+                <li><button class="nav-btn" onclick="showSection('plaafp')">3. Present Levels (PLAAFP)</button></li>
+                <li><button class="nav-btn" onclick="showSection('goals')">4. Measurable Goals</button></li>
+                <li><button class="nav-btn" onclick="showSection('services')">5. Services & Accommodations</button></li>
+                <li><button class="nav-btn" onclick="showSection('lre')">6. LRE & Justification</button></li>
+                <li><button class="nav-btn" onclick="showSection('transition')">7. Transition Plan</button></li>
+                <li><button class="nav-btn" onclick="showSection('discipline')">8. Discipline</button></li>
+                <li><button class="nav-btn" onclick="showSection('audit')">9. Finalize & Audit</button></li>
+            </ul>
+        </nav>
+
+        <main class="content-area">
+            <section id="info" class="iep-section active">
+                <h3>Meeting & Child Information</h3>
+                <div class="grid-2-col">
+                    <div><label for="child-name">Child's Name:</label><input type="text" id="child-name"></div>
+                    <div><label for="child-dob">Date of Birth:</label><input type="date" id="child-dob"></div>
+                    <div><label for="prev-meeting-date">Previous Annual IEP Meeting Date:</label><input type="date" id="prev-meeting-date"></div>
+                    <div><label for="meeting-date">This IEP Meeting Date:</label><input type="date" id="meeting-date"></div>
+                </div>
+                <div class="callout">
+                    <h4>Parental Engagement & Safeguards</h4>
+                    <div class="grid-2-col">
+                        <div>
+                            <label for="parent-language">Parent's Native Language:</label>
+                            <select id="parent-language">
+                                <option>English</option><option>Spanish</option><option>Somali</option><option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="interpreter-provided"><input type="checkbox" id="interpreter-provided"> Interpretation services were provided and parent affirmed understanding.</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="disability" class="iep-section">
+                <h3>Disability & Eligibility Information</h3>
+                <label for="disability-code">Primary Disability Category:</label>
+                <select id="disability-code">
+                    <option value="">-- Select --</option>
+                    <option value="OHI">Other Health Impairment</option>
+                    <option value="SLD">Specific Learning Disability</option>
+                    <option value="AUT">Autism</option>
+                </select>
+                <div id="sld-guardrail" class="callout" style="display:none;">
+                    <label for="rti-data-upload"><input type="checkbox" id="rti-data-upload"> **SLD Guardrail:** RTI progress monitoring data has been reviewed and is attached/linked.</label>
+                </div>
+                <label for="adverse-effect-justification">Adverse Effect Justification Summary:</label>
+                <textarea id="adverse-effect-justification" placeholder="Summarize how the disability adversely affects educational performance. This field is mandatory."></textarea>
+            </section>
+
+            <section id="plaafp" class="iep-section">
+                <h3>Present Levels of Academic and Functional Performance (PLAAFP)</h3>
+                 <label for="plaafp-academic">Academic Performance:</label><textarea id="plaafp-academic"></textarea>
+                 <label for="plaafp-functional">Functional Performance:</label><textarea id="plaafp-functional"></textarea>
+            </section>
+
+            <section id="goals" class="iep-section">
+                 <h3>Measurable Annual Goals</h3>
+                 <div id="generated-goals-list"></div>
+                 <button class="primary" onclick="alert('This would open the Measurable Goal Builder tool.')" style="margin-top:15px;">Launch Goal Builder</button>
+            </section>
+
+            <section id="services" class="iep-section">
+                 <h3>Services & Accommodations</h3>
+                 <label>Section 7: Special Education & Related Services</label><textarea id="services-grid" placeholder="e.g., Specially Designed Instruction in Reading - 3x per week for 45 mins"></textarea>
+                 <label>Section 6: Supplementary Aids & Services</label><textarea id="accommodations-grid" placeholder="e.g., Preferential seating, Use of calculator, Ed Tech support"></textarea>
+            </section>
+
+            <section id="lre" class="iep-section">
+                <h3>Least Restrictive Environment (LRE)</h3>
+                <label>Calculated % Time with Non-Disabled Peers:</label><input type="number" id="lre-percent" placeholder="e.g., 85">
+                <div id="lre-guardrail" class="callout" style="display:none;">
+                     <label for="lre-justification">**LRE Guardrail:** Justification is required for placements outside the general education classroom.</label>
+                     <textarea id="lre-justification"></textarea>
+                </div>
+            </section>
+
+            <section id="transition" class="iep-section">
+                <h3>Post-Secondary Transition Plan</h3>
+                <p>Required for students in 8th grade or older.</p>
+                <div class="callout">
+                    <h4>Postsecondary Goals Checklist</h4>
+                    <label><input type="checkbox" class="transition-goal"> Goal included for Education/Training.</label>
+                    <label><input type="checkbox" class="transition-goal"> Goal included for Employment.</label>
+                    <label><input type="checkbox" class="transition-goal"> Goal included for Independent Living (where appropriate).</label>
+                </div>
+                <div id="agency-consent-tracker">
+                    <h4>Agency Invitations & Consent</h4>
+                     <label><input type="checkbox" id="agency-invited"> Relevant agencies (e.g., Voc Rehab) were invited.</label>
+                </div>
+            </section>
+
+            <section id="discipline" class="iep-section">
+                <h3>Discipline Considerations</h3>
+                <label><input type="checkbox" id="discipline-removals"> This IEP meeting addresses disciplinary removals exceeding 10 school days.</label>
+                <div id="mdr-guardrail" class="callout" style="display:none;">
+                     <label for="mdr-form-link">**Discipline Guardrail:** A Manifestation Determination Review (MDR) is required. Link to completed Chapter 33 form:</label>
+                     <input type="text" id="mdr-form-link" placeholder="Paste link to MDR document...">
+                </div>
+            </section>
+
+            <section id="audit" class="iep-section">
+                <h3>Finalize & Generate Written Notice</h3>
+                <button class="primary" onclick="runAudit()">Run Full Compliance Audit</button>
+                <div id="audit-report" style="display:none;"></div>
+                <hr style="margin: 20px 0;">
+                <button class="primary" style="background-color: #28a745;" onclick="generateWrittenNotice()">Generate Prior Written Notice (PWN)</button>
+            </section>
+        </main>
+    </div>
+
+<script>
+    // --- Navigation ---
+    function showSection(sectionId) {
+        document.querySelectorAll('.iep-section').forEach(section => section.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.nav-btn[onclick="showSection('${sectionId}')"]`).classList.add('active');
+    }
+
+    // --- Dynamic UI Guardrails ---
+    document.getElementById('disability-code').addEventListener('change', (e) => {
+        document.getElementById('sld-guardrail').style.display = e.target.value === 'SLD' ? 'block' : 'none';
+    });
+    document.getElementById('lre-percent').addEventListener('input', (e) => {
+        document.getElementById('lre-guardrail').style.display = parseFloat(e.target.value) < 100 ? 'block' : 'none';
+    });
+    document.getElementById('discipline-removals').addEventListener('change', (e) => {
+        document.getElementById('mdr-guardrail').style.display = e.target.checked ? 'block' : 'none';
+    });
+
+
+    // --- Compliance Audit Function ---
+    function runAudit() {
+        const errors = [];
+
+        // 1. Timeline Checks
+        const prevDate = new Date(document.getElementById('prev-meeting-date').value);
+        const thisDate = new Date(document.getElementById('meeting-date').value);
+        const dayDiff = (thisDate - prevDate) / (1000 * 60 * 60 * 24);
+        if (dayDiff > 365) { // MUSER allows 364, but we'll use 365 to catch the error
+            errors.push("Timeline Failure: Annual review date exceeds 364 days from the previous IEP meeting.");
+        }
+
+        // 2. Disability Coding Checks
+        const disability = document.getElementById('disability-code').value;
+        if (disability === 'SLD' && !document.getElementById('rti-data-upload').checked) {
+            errors.push("Disability Coding Failure: For SLD eligibility, RTI data review must be confirmed.");
+        }
+        if (document.getElementById('adverse-effect-justification').value.trim() === '') {
+            errors.push("Disability Coding Failure: Adverse Effect justification is a mandatory field and cannot be blank.");
+        }
+
+        // 3. Transition Planning Checks
+        const isTransitionAge = true; // This would be calculated based on DOB
+        const transitionGoalsChecked = document.querySelectorAll('.transition-goal:checked').length;
+        if (isTransitionAge && transitionGoalsChecked < 2) { // 2 required, 1 optional
+            errors.push("Transition Plan Failure: Plan must include goals for Education/Training and Employment.");
+        }
+        if (isTransitionAge && !document.getElementById('agency-invited').checked) {
+            errors.push("Transition Plan Failure: Confirmation of agency invitation is required for transition-age students.");
+        }
+
+        // 4. LRE Justification Check
+        const lrePercent = parseFloat(document.getElementById('lre-percent').value);
+        if (lrePercent < 100 && document.getElementById('lre-justification').value.trim() === '') {
+            errors.push("LRE Guardrail: A justification narrative is required for any placement not fully in the general education setting.");
+        }
+        
+        // 5. Discipline Check
+        if (document.getElementById('discipline-removals').checked && document.getElementById('mdr-form-link').value.trim() === '') {
+            errors.push("Discipline Failure: A link to the completed MDR form is required when discipline is a focus of the meeting.");
+        }
+
+        // Display audit results
+        const reportDiv = document.getElementById('audit-report');
+        reportDiv.style.display = 'block';
+        if (errors.length > 0) {
+            reportDiv.innerHTML = '<h4>Compliance Audit Findings:</h4><ul>' + errors.map(e => `<li>${e}</li>`).join('') + '</ul>';
+        } else {
+            reportDiv.innerHTML = '<h4>✅ No compliance failures found!</h4>';
+        }
+    }
+    
+    // --- Finalization ---
+    function generateWrittenNotice() {
+        alert("The Prior Written Notice will be generated using the data from this module. It will be pre-populated with required legal language, such as 'This decision is based on [specific data], as required by 20-A MRSA §7205(4).' Please ensure you replace bracketed text before finalizing.");
+    }
+    
+    // Initialize first section view
+    showSection('info');
+
+</script>
+</body>
+</html>

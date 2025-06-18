@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoMSLawK Wiki | Dynamic IEP Compliance Module</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 25px;
+        }
+        
+        /* Header Styles */
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(120deg, #1a3b5d 0%, #2c5282 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+        
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .status-indicator {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(4px);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 25px 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar-nav h2 {
+            color: #1a3b5d;
+            text-align: center;
+            padding-bottom: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e1e8ed;
+            font-size: 1.4rem;
+        }
+        
+        .nav-list {
+            list-style-type: none;
+        }
+        
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 14px 16px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #4a5568;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 8px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+            gap: 12px;
+        }
+        
+        .nav-btn i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        .nav-btn:hover {
+            background-color: #edf2f7;
+            color: #1a3b5d;
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(120deg, #2b6cb0 0%, #3182ce 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(43, 108, 176, 0.3);
+        }
+        
+        /* Main Content Area */
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .iep-section {
+            display: none;
+        }
+        
+        .iep-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            color: #1a3b5d;
+            padding-bottom: 18px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+        }
+        
+        .section-title i {
+            background: #ebf8ff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #3182ce;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.05rem;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f7fafc;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #4299e1;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+            background: white;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(120deg, #3182ce 0%, #2b6cb0 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(43, 108, 176, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(43, 108, 176, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(120deg, #38a169 0%, #2f855a 100%);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #3182ce;
+            color: #3182ce;
+        }
+        
+        /* Callouts and Alerts */
+        .callout {
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #ecc94b;
+            background: #fefcbf;
+            border-radius: 8px;
+        }
+        
+        .callout.best-practice {
+            border-left-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .alert {
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        
+        .alert-danger {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            color: #e53e3e;
+        }
+        
+        /* Goals List */
+        .goals-list {
+            list-style-type: none;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+        
+        .goal-item {
+            padding: 18px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .goal-item:last-child {
+            border-bottom: none;
+        }
+        
+        .goal-actions button {
+            background: none;
+            border: none;
+            color: #e53e3e;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .goal-actions button:hover {
+            background: #fff5f5;
+        }
+        
+        /* Evidence Attachment Section */
+        .evidence-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px dashed #cbd5e0;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .file-input-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .file-input-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #edf2f7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .file-input-label:hover {
+            background: #e2e8f0;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        .attachments-container {
+            margin-top: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .attachment-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+        }
+        
+        .attachment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+            border-color: #cbd5e0;
+        }
+        
+        .attachment-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(120deg, #ebf8ff 0%, #bee3f8 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #3182ce;
+        }
+        
+        .attachment-details {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .attachment-details .file-name {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+        
+        .attachment-details .file-size {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .attachment-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .attachment-actions button {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: #f7fafc;
+            color: #718096;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .attachment-actions button:hover {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+        
+        .attachment-actions .delete-btn:hover {
+            background: #fff5f5;
+            color: #e53e3e;
+        }
+        
+        .no-attachments {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .no-attachments i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.7;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin: 25px 0 35px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: #edf2f7;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3182ce 0%, #63b3ed 100%);
+            border-radius: 6px;
+            width: 15%;
+            transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        
+        /* Audit Report */
+        .audit-report {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .audit-report h4 {
+            color: #e53e3e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .audit-report ul {
+            padding-left: 20px;
+        }
+        
+        .audit-report li {
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar-nav {
+                position: static;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+            
+            .header-info {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 20px;
+            }
+            
+            .attachments-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            animation: modalAppear 0.4s ease forwards;
+        }
+        
+        @keyframes modalAppear {
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .modal-title {
+            color: #1a3b5d;
+            font-size: 1.5rem;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #718096;
+            transition: color 0.2s;
+        }
+        
+        .modal-close:hover {
+            color: #e53e3e;
+        }
+        
+        .modal-body {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        /* Stats Section */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #3182ce;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-file-contract"></i> Dynamic IEP Compliance Module</h1>
+            <div class="header-info">
+                <div class="status-indicator">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Draft in Progress</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-clock"></i>
+                    <span>Last Saved: Today</span>
+                </div>
+            </div>
+        </header>
+        
+        <nav class="sidebar-nav">
+            <h2><i class="fas fa-clipboard-list"></i> IEP Module</h2>
+            <ul class="nav-list">
+                <li><button class="nav-btn active" onclick="showSection('info')">
+                    <i class="fas fa-user"></i> 1. Child Information
+                </button></li>
+                <li><button class="nav-btn" onclick="showSection('plaafp')">
+                    <i class="fas fa-chart-line"></i> 2. Present Levels
+                </button></li>
+                <li><button class="nav-btn" onclick="showSection('goals')">
+                    <i class="fas fa-bullseye"></i> 3. Measurable Goals
+                </button></li>
+                <li><button class="nav-btn" onclick="showSection('services')">
+                    <i class="fas fa-hands-helping"></i> 4. Services
+                </button></li>
+                <li><button class="nav-btn" onclick="showSection('lre')">
+                    <i class="fas fa-calculator"></i> 5. LRE Calculator
+                </button></li>
+                <li><button class="nav-btn" onclick="showSection('transition')">
+                    <i class="fas fa-graduation-cap"></i> 6. Transition Plan
+                </button></li>
+                <li><button class="nav-btn" onclick="showSection('audit')">
+                    <i class="fas fa-search"></i> 7. Finalize & Audit
+                </button></li>
+            </ul>
+            
+            <div class="stats-container" style="margin-top: 30px;">
+                <div class="stat-card">
+                    <div class="stat-value" id="attachments-count">0</div>
+                    <div class="stat-label">Attachments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="goals-count">0</div>
+                    <div class="stat-label">Goals</div>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="content-area">
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span>Progress</span>
+                    <span id="progress-percent">15%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            
+            <section id="info" class="iep-section active">
+                <h2 class="section-title"><i class="fas fa-user"></i> Child Information</h2>
+                
+                <div class="form-group">
+                    <label for="child-name"><i class="fas fa-signature"></i> Child's Name</label>
+                    <input type="text" id="child-name" placeholder="Enter full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="child-dob"><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                    <input type="date" id="child-dob">
+                </div>
+                
+                <div class="form-group">
+                    <label for="child-grade"><i class="fas fa-graduation-cap"></i> Grade Level</label>
+                    <select id="child-grade">
+                        <option value="">Select grade level</option>
+                        <option value="Pre-K">Pre-K</option>
+                        <option value="K">Kindergarten</option>
+                        <option value="1">1st Grade</option>
+                        <option value="2">2nd Grade</option>
+                        <option value="3">3rd Grade</option>
+                        <option value="4">4th Grade</option>
+                        <option value="5">5th Grade</option>
+                        <option value="6">6th Grade</option>
+                        <option value="7">7th Grade</option>
+                        <option value="8">8th Grade</option>
+                        <option value="9">9th Grade</option>
+                        <option value="10">10th Grade</option>
+                        <option value="11">11th Grade</option>
+                        <option value="12">12th Grade</option>
+                    </select>
+                </div>
+            </section>
+            
+            <section id="plaafp" class="iep-section">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Present Levels of Academic and Functional Performance (PLAAFP)</h2>
+                
+                <div class="callout best-practice">
+                    <h3><i class="fas fa-lightbulb"></i> Best Practice</h3>
+                    <p>Avoid subjective terms like "seems to" or "sometimes." Use objective, measurable data. Example: Instead of "John struggles with reading," write "John reads 3rd-grade text at 58 correct words per minute (benchmark is 90)."</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="plaafp-academic"><i class="fas fa-book"></i> Present Levels of Academic Performance</label>
+                    <textarea id="plaafp-academic" placeholder="Describe academic performance with measurable data..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="plaafp-functional"><i class="fas fa-running"></i> Present Levels of Functional Performance</label>
+                    <textarea id="plaafp-functional" placeholder="Describe functional performance with measurable data..."></textarea>
+                </div>
+                
+                <div class="evidence-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-paperclip"></i> Supporting Evidence</h3>
+                        <button class="btn btn-primary" onclick="openFileInput('plaafp')">
+                            <i class="fas fa-plus"></i> Add Evidence
+                        </button>
+                    </div>
+                    
+                    <p>Attach assessment reports, work samples, or observation notes that support the PLAAFP statements.</p>
+                    
+                    <div class="attachments-container" id="plaafp-attachments">
+                        <div class="no-attachments">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>No files attached yet</p>
+                            <p>Upload evidence to support this section</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="goals" class="iep-section">
+                <h2 class="section-title"><i class="fas fa-bullseye"></i> Measurable Annual Goals</h2>
+                
+                <div class="callout">
+                    <h3><i class="fas fa-tools"></i> Measurable Goal Builder</h3>
+                    <div class="form-group">
+                        <label>Condition</label>
+                        <input type="text" id="goal-condition" placeholder="e.g., Given a 4th-grade text and minimal prompts">
+                    </div>
+                    <div class="form-group">
+                        <label>Skill</label>
+                        <input type="text" id="goal-skill" placeholder="e.g., will identify the main idea and 3 supporting details">
+                    </div>
+                    <div class="form-group">
+                        <label>Measurement</label>
+                        <input type="text" id="goal-measurement" placeholder="e.g., with 80% accuracy in 4 of 5 trials">
+                    </div>
+                    <div class="form-group">
+                        <label>Evidence</label>
+                        <input type="text" id="goal-evidence" placeholder="e.g., as measured by classroom work samples">
+                    </div>
+                    <button class="btn btn-primary" onclick="addGoal()">
+                        <i class="fas fa-plus-circle"></i> Add Goal
+                    </button>
+                </div>
+                
+                <h3><i class="fas fa-list-ol"></i> Generated Goals</h3>
+                <ul class="goals-list" id="generated-goals-list">
+                    <li class="goal-item">
+                        <div class="goal-text">No goals added yet. Use the goal builder to create measurable goals.</div>
+                    </li>
+                </ul>
+                
+                <div class="evidence-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-paperclip"></i> Goal Evidence</h3>
+                        <button class="btn btn-primary" onclick="openFileInput('goals')">
+                            <i class="fas fa-plus"></i> Add Evidence
+                        </button>
+                    </div>
+                    
+                    <p>Attach baseline data, progress monitoring charts, or work samples related to the goals.</p>
+                    
+                    <div class="attachments-container" id="goals-attachments">
+                        <div class="no-attachments">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>No files attached yet</p>
+                            <p>Upload evidence to support this section</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="services" class="iep-section">
+                <h2 class="section-title"><i class="fas fa-hands-helping"></i> Special Education, Related Services, & Supplementary Aids</h2>
+                
+                <div class="form-group">
+                    <label for="services-grid"><i class="fas fa-clipboard-check"></i> Section 7: Special Education & Related Services (Certified Staff Only)</label>
+                    <textarea id="services-grid" placeholder="e.g., Specially Designed Instruction in Reading - 3x per week for 45 mins"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="accommodations-grid"><i class="fas fa-wheelchair"></i> Section 6: Supplementary Aids, Services, Modifications, and/or Supports</label>
+                    <textarea id="accommodations-grid" placeholder="e.g., Preferential seating, Use of calculator, Ed Tech support"></textarea>
+                </div>
+                
+                <div class="evidence-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-paperclip"></i> Service Documentation</h3>
+                        <button class="btn btn-primary" onclick="openFileInput('services')">
+                            <i class="fas fa-plus"></i> Add Documentation
+                        </button>
+                    </div>
+                    
+                    <p>Attach service logs, schedules, or implementation plans for services and accommodations.</p>
+                    
+                    <div class="attachments-container" id="services-attachments">
+                        <div class="no-attachments">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>No files attached yet</p>
+                            <p>Upload documentation for services</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="lre" class="iep-section">
+                <h2 class="section-title"><i class="fas fa-calculator"></i> Least Restrictive Environment (LRE) Calculator</h2>
+                
+                <h3><i class="fas fa-school"></i> Grades K-12</h3>
+                <div class="form-group">
+                    <label>Total minutes in school week</label>
+                    <input type="number" id="k12-total-mins" placeholder="e.g., 1800">
+                </div>
+                <div class="form-group">
+                    <label>Minutes outside general education</label>
+                    <input type="number" id="k12-removed-mins" placeholder="e.g., 300">
+                </div>
+                <button class="btn btn-primary" onclick="calculateK12LRE()">
+                    <i class="fas fa-calculator"></i> Calculate K-12 LRE
+                </button>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Time with non-disabled peers</label>
+                    <input type="text" id="k12-lre-result" readonly value="--%" style="font-weight: bold; font-size: 1.1rem;">
+                </div>
+                
+                <div class="evidence-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-paperclip"></i> LRE Documentation</h3>
+                        <button class="btn btn-primary" onclick="openFileInput('lre')">
+                            <i class="fas fa-plus"></i> Add Documentation
+                        </button>
+                    </div>
+                    
+                    <p>Attach LRE justification, placement meeting notes, or inclusion plans.</p>
+                    
+                    <div class="attachments-container" id="lre-attachments">
+                        <div class="no-attachments">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>No files attached yet</p>
+                            <p>Upload documentation for LRE decisions</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="transition" class="iep-section">
+                <h2 class="section-title"><i class="fas fa-graduation-cap"></i> Post-Secondary Transition Plan (Beginning by 9th grade)</h2>
+                
+                <div class="alert alert-danger">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Graduation Notice</h4>
+                    <p>Per MUSER, the transition plan must state that graduation with a regular diploma permanently ends entitlement to a Free Appropriate Public Education (FAPE).</p>
+                </div>
+                
+                <h3><i class="fas fa-building"></i> Agency Consent Tracker</h3>
+                <div id="agency-list" style="margin-bottom: 20px;">
+                    <p>No agencies added yet. Add agencies that require consent for transition services.</p>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="new-agency-name" placeholder="Agency Name (e.g., Vocational Rehab)">
+                </div>
+                <button class="btn btn-primary" onclick="addAgency()">
+                    <i class="fas fa-plus"></i> Add Agency for Consent
+                </button>
+                
+                <div class="evidence-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-paperclip"></i> Transition Documentation</h3>
+                        <button class="btn btn-primary" onclick="openFileInput('transition')">
+                            <i class="fas fa-plus"></i> Add Documentation
+                        </button>
+                    </div>
+                    
+                    <p>Attach transition assessments, agency referrals, or post-secondary plans.</p>
+                    
+                    <div class="attachments-container" id="transition-attachments">
+                        <div class="no-attachments">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>No files attached yet</p>
+                            <p>Upload transition documentation</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="audit" class="iep-section">
+                <h2 class="section-title"><i class="fas fa-search"></i> Finalize & Generate Written Notice</h2>
+                
+                <p>Before proceeding, run a compliance audit to check for common errors and ensure all required sections are complete.</p>
+                
+                <button class="btn btn-primary" onclick="runAudit()" style="margin: 25px 0;">
+                    <i class="fas fa-search"></i> Run Compliance Audit
+                </button>
+                
+                <div class="audit-report" id="audit-report" style="display: none;">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Compliance Audit Findings</h4>
+                    <p>Potential compliance issues found:</p>
+                    <ul>
+                        <li>No evidence attached to PLAAFP section</li>
+                        <li>Goals have been written, but no services are listed in Section 7</li>
+                    </ul>
+                </div>
+                
+                <hr style="margin: 30px 0; border-top: 1px dashed #cbd5e0;">
+                
+                <p>When the IEP is complete and compliant, you can proceed to generate the official <strong>Written Notice</strong> to document the team's decisions.</p>
+                
+                <button class="btn btn-success" onclick="generateWrittenNotice()" style="margin-top: 25px;">
+                    <i class="fas fa-file-pdf"></i> Generate Written Notice
+                </button>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirm Deletion</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this file? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" style="background-color: #e53e3e;" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State Management ---
+        let generatedGoals = [];
+        let consentAgencies = [];
+        let attachments = {
+            plaafp: [],
+            goals: [],
+            services: [],
+            lre: [],
+            transition: []
+        };
+        let currentSection = 'info';
+        let fileToDelete = null;
+        
+        // File type icons mapping
+        const fileIcons = {
+            'pdf': 'fas fa-file-pdf',
+            'doc': 'fas fa-file-word',
+            'docx': 'fas fa-file-word',
+            'xls': 'fas fa-file-excel',
+            'xlsx': 'fas fa-file-excel',
+            'ppt': 'fas fa-file-powerpoint',
+            'pptx': 'fas fa-file-powerpoint',
+            'jpg': 'fas fa-file-image',
+            'jpeg': 'fas fa-file-image',
+            'png': 'fas fa-file-image',
+            'gif': 'fas fa-file-image',
+            'txt': 'fas fa-file-alt',
+            'zip': 'fas fa-file-archive',
+            'default': 'fas fa-file'
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
+            setupFileInputs();
+            updateProgressBar();
+            updateStats();
+        });
+
+        // --- Navigation ---
+        function showSection(sectionId) {
+            document.querySelectorAll('.iep-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => 
+                btn.getAttribute('onclick').includes(`'${sectionId}'`)
+            );
+            
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            currentSection = sectionId;
+            updateProgressBar();
+        }
+
+        // --- Progress Tracking ---
+        function updateProgressBar() {
+            const sections = ['info', 'plaafp', 'goals', 'services', 'lre', 'transition', 'audit'];
+            const currentIndex = sections.indexOf(currentSection);
+            const progressPercent = Math.round((currentIndex / (sections.length - 1)) * 100);
+            
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            document.getElementById('progress-percent').textContent = `${progressPercent}%`;
+        }
+        
+        // --- Stats Display ---
+        function updateStats() {
+            // Count all attachments
+            let totalAttachments = 0;
+            for (const section in attachments) {
+                totalAttachments += attachments[section].length;
+            }
+            document.getElementById('attachments-count').textContent = totalAttachments;
+            
+            // Count goals
+            document.getElementById('goals-count').textContent = generatedGoals.length;
+        }
+
+        // --- Goal Builder ---
+        function addGoal() {
+            const childName = document.getElementById('child-name').value || "[Child's Name]";
+            const condition = document.getElementById('goal-condition').value;
+            const skill = document.getElementById('goal-skill').value;
+            const measurement = document.getElementById('goal-measurement').value;
+            const evidence = document.getElementById('goal-evidence').value;
+
+            if (!condition || !skill || !measurement || !evidence) {
+                alert("Please fill out all parts of the Goal Builder.");
+                return;
+            }
+            
+            const goalText = `By the end of this IEP, ${condition}, ${childName} will ${skill}, with ${measurement}, ${evidence}.`;
+            generatedGoals.push({ text: goalText, domain: 'Academic' });
+            renderGoals();
+            saveToStorage();
+            updateStats();
+            
+            // Clear inputs
+            document.getElementById('goal-condition').value = '';
+            document.getElementById('goal-skill').value = '';
+            document.getElementById('goal-measurement').value = '';
+            document.getElementById('goal-evidence').value = '';
+        }
+        
+        function renderGoals() {
+            const list = document.getElementById('generated-goals-list');
+            list.innerHTML = '';
+            
+            if (generatedGoals.length === 0) {
+                list.innerHTML = `
+                    <li class="goal-item">
+                        <div class="goal-text">No goals added yet. Use the goal builder to create measurable goals.</div>
+                    </li>
+                `;
+                return;
+            }
+            
+            generatedGoals.forEach((goal, index) => {
+                const li = document.createElement('li');
+                li.className = 'goal-item';
+                li.innerHTML = `
+                    <div class="goal-text">${goal.text}</div>
+                    <div class="goal-actions">
+                        <button onclick="removeGoal(${index})" title="Delete goal">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+        
+        function removeGoal(index) {
+            generatedGoals.splice(index, 1);
+            renderGoals();
+            saveToStorage();
+            updateStats();
+        }
+
+        // --- LRE Calculator ---
+        function calculateK12LRE() {
+            const total = parseFloat(document.getElementById('k12-total-mins').value);
+            const removed = parseFloat(document.getElementById('k12-removed-mins').value);
+            
+            if (total > 0 && removed >= 0) {
+                const percentage = ((total - removed) / total) * 100;
+                const resultElement = document.getElementById('k12-lre-result');
+                
+                // Add interpretation
+                let interpretation = '';
+                if (percentage >= 80) {
+                    interpretation = 'Excellent inclusion';
+                    resultElement.style.color = '#38a169';
+                } else if (percentage >= 60) {
+                    interpretation = 'Good inclusion';
+                    resultElement.style.color = '#d69e2e';
+                } else {
+                    interpretation = 'Review recommended';
+                    resultElement.style.color = '#e53e3e';
+                }
+                
+                resultElement.value = `${percentage.toFixed(1)}% (${interpretation})`;
+            } else {
+                document.getElementById('k12-lre-result').value = 'Invalid input';
+                document.getElementById('k12-lre-result').style.color = '#e53e3e';
+            }
+        }
+
+        // --- Transition Consent Tracker ---
+        function addAgency() {
+            const nameInput = document.getElementById('new-agency-name');
+            if (nameInput.value) {
+                consentAgencies.push({ 
+                    name: nameInput.value, 
+                    status: 'Pending',
+                    date: new Date().toLocaleDateString()
+                });
+                nameInput.value = '';
+                renderAgencies();
+                saveToStorage();
+            }
+        }
+        
+        function updateConsent(index, status) {
+            consentAgencies[index].status = status;
+            consentAgencies[index].date = new Date().toLocaleDateString();
+            renderAgencies();
+            saveToStorage();
+        }
+        
+        function renderAgencies() {
+            const list = document.getElementById('agency-list');
+            list.innerHTML = '';
+            
+            if (consentAgencies.length === 0) {
+                list.innerHTML = '<p>No agencies added yet. Add agencies that require consent for transition services.</p>';
+                return;
+            }
+            
+            consentAgencies.forEach((agency, index) => {
+                const item = document.createElement('div');
+                item.className = 'goal-item';
+                item.innerHTML = `
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600;">${agency.name}</div>
+                        <div style="display: flex; gap: 15px; margin-top: 8px; font-size: 0.9rem;">
+                            <span>Status: 
+                                <span style="color: ${agency.status === 'Consent Given' ? '#38a169' : 
+                                  agency.status === 'Refused' ? '#e53e3e' : '#718096'}">
+                                    ${agency.status}
+                                </span>
+                            </span>
+                            <span>Date: ${agency.date}</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button onclick="updateConsent(${index}, 'Consent Given')" class="btn" style="background: #38a169; color: white; padding: 8px 12px; margin-right: 5px;">
+                            <i class="fas fa-check"></i> Given
+                        </button>
+                        <button onclick="updateConsent(${index}, 'Refused')" class="btn" style="background: #e53e3e; color: white; padding: 8px 12px;">
+                            <i class="fas fa-times"></i> Refused
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // --- Evidence Attachment System ---
+        function setupFileInputs() {
+            const sections = ['plaafp', 'goals', 'services', 'lre', 'transition'];
+            
+            sections.forEach(section => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.id = `file-input-${section}`;
+                input.multiple = true;
+                input.style.display = 'none';
+                input.addEventListener('change', function(e) {
+                    handleFiles(e.target.files, section);
+                });
+                document.body.appendChild(input);
+            });
+        }
+        
+        function openFileInput(section) {
+            document.getElementById(`file-input-${section}`).click();
+        }
+        
+        function handleFiles(files, section) {
+            if (files.length === 0) return;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                // Check file size (max 5MB for demo)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File "${file.name}" is too large. Max size is 5MB.`);
+                    continue;
+                }
+                
+                // Generate a preview URL
+                const previewUrl = URL.createObjectURL(file);
+                
+                // Add to attachments array
+                attachments[section].push({
+                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    section: section,
+                    lastModified: file.lastModified,
+                    previewUrl: previewUrl,
+                    uploadDate: new Date().toLocaleString()
+                });
+            }
+            
+            renderAttachments(section);
+            saveToStorage();
+            updateStats();
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+        
+        function getFileIcon(filename) {
+            const extension = filename.split('.').pop().toLowerCase();
+            return fileIcons[extension] || fileIcons.default;
+        }
+        
+        function renderAttachments(section) {
+            const container = document.getElementById(`${section}-attachments`);
+            container.innerHTML = '';
+            
+            if (attachments[section].length === 0) {
+                container.innerHTML = `
+                    <div class="no-attachments">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>No files attached yet</p>
+                        <p>Upload evidence to support this section</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            attachments[section].forEach((file, index) => {
+                const fileSize = formatFileSize(file.size);
+                const fileTypeIcon = getFileIcon(file.name);
+                
+                const card = document.createElement('div');
+                card.className = 'attachment-card';
+                card.innerHTML = `
+                    <div class="attachment-icon">
+                        <i class="${fileTypeIcon}"></i>
+                    </div>
+                    <div class="attachment-details">
+                        <div class="file-name" title="${file.name}">${file.name}</div>
+                        <div class="file-size">${fileSize} • ${file.uploadDate}</div>
+                    </div>
+                    <div class="attachment-actions">
+                        <button class="view-btn" onclick="viewAttachment('${section}', ${index})" title="View">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="delete-btn" onclick="requestDelete('${section}', ${index})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+        
+        function viewAttachment(section, index) {
+            const file = attachments[section][index];
+            window.open(file.previewUrl, '_blank');
+        }
+        
+        function requestDelete(section, index) {
+            fileToDelete = { section, index };
+            document.getElementById('confirmation-modal').style.display = 'flex';
+        }
+        
+        function confirmDelete() {
+            if (fileToDelete) {
+                const { section, index } = fileToDelete;
+                
+                // Revoke the object URL to free memory
+                URL.revokeObjectURL(attachments[section][index].previewUrl);
+                
+                // Remove the file from the attachments array
+                attachments[section].splice(index, 1);
+                
+                renderAttachments(section);
+                saveToStorage();
+                updateStats();
+                closeModal();
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('confirmation-modal').style.display = 'none';
+            fileToDelete = null;
+        }
+
+        // --- Storage Management ---
+        function saveToStorage() {
+            const saveData = {
+                goals: generatedGoals,
+                agencies: consentAgencies,
+                attachments: attachments,
+                childInfo: {
+                    name: document.getElementById('child-name').value,
+                    dob: document.getElementById('child-dob').value,
+                    grade: document.getElementById('child-grade').value
+                }
+            };
+            
+            localStorage.setItem('iepData', JSON.stringify(saveData));
+        }
+        
+        function loadFromStorage() {
+            const savedData = localStorage.getItem('iepData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                // Load goals
+                if (data.goals) {
+                    generatedGoals = data.goals;
+                    renderGoals();
+                }
+                
+                // Load agencies
+                if (data.agencies) {
+                    consentAgencies = data.agencies;
+                    renderAgencies();
+                }
+                
+                // Load attachments
+                if (data.attachments) {
+                    attachments = data.attachments;
+                    
+                    // Render attachments for each section
+                    Object.keys(attachments).forEach(section => {
+                        renderAttachments(section);
+                    });
+                }
+                
+                // Load child info
+                if (data.childInfo) {
+                    document.getElementById('child-name').value = data.childInfo.name || '';
+                    document.getElementById('child-dob').value = data.childInfo.dob || '';
+                    document.getElementById('child-grade').value = data.childInfo.grade || '';
+                }
+            }
+        }
+
+        // --- Compliance Audit ---
+        function runAudit() {
+            const errors = [];
+            const plaafpText = document.getElementById('plaafp-academic').value.toLowerCase();
+            const servicesText = document.getElementById('services-grid').value.toLowerCase();
+            const reportDiv = document.getElementById('audit-report');
+            
+            // Check 1: Subjective language in PLAAFP
+            if (plaafpText.includes('seems to') || plaafpText.includes('sometimes')) {
+                errors.push("PLAAFP may contain subjective language ('seems to', 'sometimes'). Use objective data.");
+            }
+            
+            // Check 2: Ed Techs in the wrong section
+            if (servicesText.includes('ed tech') || servicesText.includes('educational technician')) {
+                errors.push("Ed Techs or BHPs should be listed in Section 6 (Supplementary Aids), not Section 7 (Services).");
+            }
+
+            // Check 3: Goals without services
+            if (generatedGoals.length > 0 && servicesText.trim() === '') {
+                errors.push("Goals have been written, but no services are listed in Section 7.");
+            }
+            
+            // Check 4: Missing attachments in key sections
+            if (attachments.plaafp.length === 0) {
+                errors.push("No evidence attached to PLAAFP section. Consider adding assessment data.");
+            }
+            if (attachments.goals.length === 0 && generatedGoals.length > 0) {
+                errors.push("No evidence attached to Goals section. Consider adding baseline data.");
+            }
+            if (attachments.services.length === 0 && servicesText.trim() !== '') {
+                errors.push("No documentation attached to Services section.");
+            }
+
+            // Display audit results
+            reportDiv.style.display = 'block';
+            if (errors.length > 0) {
+                reportDiv.innerHTML = `
+                    <h4><i class="fas fa-exclamation-triangle"></i> Compliance Audit Findings</h4>
+                    <p>${errors.length} potential compliance issues found:</p>
+                    <ul>${errors.map(e => `<li>${e}</li>`).join('')}</ul>
+                `;
+            } else {
+                reportDiv.innerHTML = `
+                    <h4 style="color: #38a169;"><i class="fas fa-check-circle"></i> No Compliance Issues Found</h4>
+                    <p>All critical sections appear to meet compliance requirements.</p>
+                `;
+            }
+        }
+        
+        // --- Finalization ---
+        function generateWrittenNotice() {
+            const childName = document.getElementById('child-name').value || "the student";
+            
+            // Check if all sections are complete
+            let incompleteSections = [];
+            
+            if (!childName) incompleteSections.push("Child Information");
+            if (!document.getElementById('plaafp-academic').value) incompleteSections.push("PLAAFP");
+            if (generatedGoals.length === 0) incompleteSections.push("Goals");
+            if (!document.getElementById('services-grid').value) incompleteSections.push("Services");
+            
+            if (incompleteSections.length > 0) {
+                alert(`The following sections are incomplete:\n\n${incompleteSections.join('\n')}\n\nPlease complete all sections before generating the Written Notice.`);
+                return;
+            }
+            
+            alert(`The IEP for ${childName} is complete and ready for finalization. The Written Notice document will be generated.`);
+            // In a real implementation, this would generate a PDF document
+        }
+        
+        // Initialize first section view
+        showSection('info');
+    </script>
+</body>
+</html>
