@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced IEP Compliance Module | MUSER-Aligned LRE Calculator</title>
+    <title>Enhanced IEP Compliance Module | Maine MUSER</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -487,6 +487,99 @@
             font-size: 0.9rem;
             color: var(--gray);
         }
+        
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Section Placeholder */
+        .section-placeholder {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--gray);
+        }
+        
+        .section-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #e1e8ed;
+        }
+        
+        .section-placeholder h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        /* Present Levels Styles */
+        .strength-card {
+            background: #e6f4ea;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .need-card {
+            background: #fce8e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Goals Section */
+        .goal-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .goal-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .goal-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .metric-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -512,194 +605,683 @@
         <nav class="sidebar-nav">
             <h2><i class="fas fa-clipboard-list"></i> IEP Sections</h2>
             <ul class="nav-list">
-                <li><button class="nav-btn">
+                <li><button class="nav-btn" data-section="child-info">
                     <i class="fas fa-user"></i> Child Information
                 </button></li>
-                <li><button class="nav-btn">
+                <li><button class="nav-btn" data-section="plaafp">
                     <i class="fas fa-chart-line"></i> Present Levels
                 </button></li>
-                <li><button class="nav-btn">
+                <li><button class="nav-btn" data-section="goals">
                     <i class="fas fa-bullseye"></i> Measurable Goals
                 </button></li>
-                <li><button class="nav-btn">
+                <li><button class="nav-btn" data-section="services">
                     <i class="fas fa-hands-helping"></i> Services
                 </button></li>
-                <li><button class="nav-btn active">
+                <li><button class="nav-btn active" data-section="lre">
                     <i class="fas fa-calculator"></i> LRE Calculator
                 </button></li>
-                <li><button class="nav-btn">
+                <li><button class="nav-btn" data-section="transition">
                     <i class="fas fa-graduation-cap"></i> Transition Plan
                 </button></li>
-                <li><button class="nav-btn">
+                <li><button class="nav-btn" data-section="audit">
                     <i class="fas fa-search"></i> Finalize & Audit
                 </button></li>
             </ul>
             
             <div style="margin-top: 30px; text-align: center; color: var(--gray);">
                 <p><i class="fas fa-info-circle"></i> Current Section</p>
-                <h3 style="color: var(--primary); margin-top: 5px;">LRE Calculator</h3>
+                <h3 id="current-section-name" style="color: var(--primary); margin-top: 5px;">LRE Calculator</h3>
             </div>
         </nav>
         
         <main class="content-area">
-            <div class="section-header">
-                <div class="section-icon">
-                    <i class="fas fa-calculator"></i>
-                </div>
-                <div>
-                    <h1 class="section-title">Least Restrictive Environment (LRE) Calculator</h1>
-                    <p class="section-description">
-                        Calculate the percentage of time a student spends with non-disabled peers to determine appropriate placement and ensure compliance with IDEA regulations and MUSER requirements.
-                    </p>
-                </div>
-            </div>
-            
-            <!-- MUSER Guidelines Section -->
-            <div class="muser-guidelines">
-                <h3 class="muser-title"><i class="fas fa-book"></i> MUSER Compliance Guidelines</h3>
-                <p>According to Maine Unified Special Education Regulations (MUSER IV.2.D.&E.):</p>
-                <ul class="muser-list">
-                    <li>Placement decisions must be based on the student's unique needs</li>
-                    <li>Students should be educated with non-disabled peers to the maximum extent appropriate</li>
-                    <li>Removal from general education requires justification and documentation</li>
-                    <li>Schools must provide a continuum of alternative placements</li>
-                    <li>Placement decisions must be reviewed at least annually</li>
-                </ul>
-            </div>
-            
-            <div class="calculator-container">
-                <div class="calculator-card">
-                    <h2 class="card-title"><i class="fas fa-school"></i> K-12 LRE Calculator</h2>
-                    
-                    <div class="form-group">
-                        <label for="k12-total-mins">Total minutes in student's school week</label>
-                        <input type="number" id="k12-total-mins" placeholder="e.g., 1800" value="1800">
-                        <p class="input-hint">Total instructional minutes in a typical week (usually 1800 for 6-hour days)</p>
+            <!-- Child Information Section -->
+            <section id="child-info" class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-user"></i>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="k12-removed-mins">Minutes outside general education classroom</label>
-                        <input type="number" id="k12-removed-mins" placeholder="e.g., 300" value="300">
-                        <p class="input-hint">Time spent in special education settings, therapy, or pull-out services</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="placement-type">Current Placement Type</label>
-                        <select id="placement-type">
-                            <option value="gened">General Education Classroom</option>
-                            <option value="resource">Resource Room (Partial Pull-Out)</option>
-                            <option value="selfcontained">Self-Contained Classroom</option>
-                            <option value="specialized">Specialized School</option>
-                            <option value="homebound">Homebound Instruction</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="lre-notes">Placement Notes</label>
-                        <textarea id="lre-notes" placeholder="Briefly describe the student's placement...">John receives reading support in a small group for 45 minutes daily.</textarea>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="calculateLRE()">
-                        <i class="fas fa-calculator"></i> Calculate LRE Percentage
-                    </button>
+                    <h1 class="section-title">Child Information</h1>
                 </div>
                 
-                <div class="results-card">
-                    <h2 class="results-title">LRE Calculation Results</h2>
-                    <p>Time with non-disabled peers</p>
-                    <div class="lre-percentage">83.3%</div>
-                    <div class="visualization">
-                        <div class="inclusion-bar" style="width: 83.3%"></div>
-                        <div class="bar-label inclusion-label">Inclusion</div>
-                        <div class="bar-label exclusion-label">Specialized</div>
-                    </div>
-                    <div class="lre-interpretation good">Good Inclusion</div>
-                    <p>Based on 1800 total minutes and 300 minutes in specialized settings</p>
-                </div>
-            </div>
-            
-            <div class="compliance-section">
-                <h2 class="compliance-title"><i class="fas fa-shield-alt"></i> Compliance Documentation</h2>
-                
-                <div class="compliance-card">
-                    <h3><i class="fas fa-exclamation-triangle"></i> MUSER LRE Justification Required</h3>
-                    <p>According to IDEA and Maine Unified Special Education Regulations (MUSER), the IEP team must provide justification for any removal from the general education environment. This justification must include:</p>
-                    <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
-                        <li>Why the student cannot be educated in general education with supplementary aids and services</li>
-                        <li>The alternatives considered and why they were rejected</li>
-                        <li>How the student will participate in non-academic activities</li>
-                        <li>Documentation of attempted interventions (Tier 1 and Tier 2)</li>
-                    </ul>
-                    
-                    <div class="form-group">
-                        <label for="lre-justification">LRE Justification Statement (MUSER IV.2.E)</label>
-                        <textarea id="lre-justification" rows="4">John requires specialized reading instruction in a small group setting to address decoding and fluency challenges that could not be adequately supported with in-class accommodations alone. We considered additional in-class support but determined that targeted intervention was necessary. John participates in all non-academic activities with his peers.</textarea>
-                    </div>
-                </div>
-                
-                <div class="compliance-card">
-                    <h3><i class="fas fa-clipboard-check"></i> MUSER Documentation Checklist</h3>
-                    <p>Ensure these items are documented in the IEP according to MUSER requirements:</p>
-                    <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
-                        <li>LRE percentage calculation included in the IEP</li>
-                        <li>Placement decision clearly documented (MUSER IV.2.D)</li>
-                        <li>Supplementary aids and services specified</li>
-                        <li>Parent consent obtained for placement</li>
-                        <li>Referral documentation attached (if applicable)</li>
-                        <li>Intervention history documented</li>
-                    </ul>
-                    
-                    <div class="form-group">
-                        <div class="placeholder-card">
-                            <i class="fas fa-paperclip fa-2x"></i>
-                            <p>Referral for Special Education Services (2019).pdf</p>
-                            <button class="btn btn-outline">
-                                <i class="fas fa-eye"></i> Preview Document
-                            </button>
+                <div class="card-grid">
+                    <div>
+                        <h2>Student Details</h2>
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" value="John Michael Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Date of Birth</label>
+                            <input type="text" value="03/15/2015">
+                        </div>
+                        <div class="form-group">
+                            <label>Student ID</label>
+                            <input type="text" value="S-2023-00145">
+                        </div>
+                        <div class="form-group">
+                            <label>Grade Level</label>
+                            <input type="text" value="3rd Grade">
                         </div>
                     </div>
                     
+                    <div>
+                        <h2>Parent/Guardian Information</h2>
+                        <div class="form-group">
+                            <label>Primary Contact</label>
+                            <input type="text" value="Mary Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Relationship</label>
+                            <input type="text" value="Mother">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" value="(207) 555-0123">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" value="mary.doe@example.com">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3><i class="fas fa-clipboard-check"></i> MUSER Compliance</h3>
+                    <p>According to Maine Unified Special Education Regulations (MUSER):</p>
+                    <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
+                        <li>Section II.A: Student information must be accurately documented</li>
+                        <li>Section II.C: Parent/guardian contact information must be current</li>
+                        <li>Section IV.1: Consent documentation must be on file</li>
+                    </ul>
+                    
                     <button class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save to IEP
+                        <i class="fas fa-save"></i> Save Information
+                    </button>
+                </div>
+            </section>
+            
+            <!-- Present Levels Section -->
+            <section id="plaafp" class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h1 class="section-title">Present Levels of Academic Achievement</h1>
+                </div>
+                
+                <div class="muser-guidelines">
+                    <h3 class="muser-title"><i class="fas fa-book"></i> MUSER Compliance Guidelines</h3>
+                    <p>According to Maine Unified Special Education Regulations (MUSER IV.3.A):</p>
+                    <ul class="muser-list">
+                        <li>Must include the child's strengths and parental concerns</li>
+                        <li>Must include academic, developmental, and functional needs</li>
+                        <li>Must include how the disability affects involvement in general curriculum</li>
+                        <li>Must be based on current evaluation data</li>
+                    </ul>
+                </div>
+                
+                <div class="card-grid">
+                    <div>
+                        <h2><i class="fas fa-star"></i> Strengths</h2>
+                        <div class="strength-card">
+                            <h3><i class="fas fa-comments"></i> Communication Skills</h3>
+                            <p>John expresses himself clearly and articulately. He participates actively in class discussions and asks thoughtful questions.</p>
+                        </div>
+                        <div class="strength-card">
+                            <h3><i class="fas fa-paint-brush"></i> Artistic Abilities</h3>
+                            <p>John demonstrates exceptional creativity in art projects. He enjoys drawing and has a keen eye for detail and color.</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2><i class="fas fa-lightbulb"></i> Areas of Need</h2>
+                        <div class="need-card">
+                            <h3><i class="fas fa-book"></i> Reading Fluency</h3>
+                            <p>John reads at 45 wpm (below 3rd grade benchmark of 90 wpm). He struggles with multisyllabic words and frequently loses his place.</p>
+                        </div>
+                        <div class="need-card">
+                            <h3><i class="fas fa-calculator"></i> Math Problem Solving</h3>
+                            <p>John has difficulty with multi-step word problems. He often misinterprets what the problem is asking.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="impact-statement">Impact Statement</label>
+                    <textarea id="impact-statement" rows="4">John's reading difficulties impact his ability to access grade-level content across all academic subjects. His struggles with word problems limit his math achievement.</textarea>
+                </div>
+            </section>
+            
+            <!-- Goals Section -->
+            <section id="goals" class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h1 class="section-title">Measurable Annual Goals</h1>
+                </div>
+                
+                <div class="goal-card">
+                    <h3><i class="fas fa-book"></i> Reading Goal</h3>
+                    <p>Given grade-level text, John will read aloud at a rate of 90 words per minute with 95% accuracy by May 2024.</p>
+                    
+                    <div class="goal-metrics">
+                        <div class="metric-item">
+                            <strong>Baseline:</strong> 45 wpm
+                        </div>
+                        <div class="metric-item">
+                            <strong>Progress Monitoring:</strong> Weekly oral reading fluency probes
+                        </div>
+                        <div class="metric-item">
+                            <strong>Mastery Criteria:</strong> 4/5 consecutive probes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="goal-card">
+                    <h3><i class="fas fa-calculator"></i> Math Goal</h3>
+                    <p>When presented with multi-step word problems, John will correctly solve 8 out of 10 problems independently by May 2024.</p>
+                    
+                    <div class="goal-metrics">
+                        <div class="metric-item">
+                            <strong>Baseline:</strong> 2/10 problems correct
+                        </div>
+                        <div class="metric-item">
+                            <strong>Progress Monitoring:</strong> Bi-weekly math probes
+                        </div>
+                        <div class="metric-item">
+                            <strong>Mastery Criteria:</strong> 4/5 consecutive probes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="goal-card">
+                    <h3><i class="fas fa-comments"></i> Social Skills Goal</h3>
+                    <p>During group activities, John will appropriately initiate interactions with peers in 4 out of 5 opportunities by May 2024.</p>
+                    
+                    <div class="goal-metrics">
+                        <div class="metric-item">
+                            <strong>Baseline:</strong> 1/5 opportunities
+                        </div>
+                        <div class="metric-item">
+                            <strong>Progress Monitoring:</strong> Teacher observation logs
+                        </div>
+                        <div class="metric-item">
+                            <strong>Mastery Criteria:</strong> 4/5 opportunities for 6 weeks
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3><i class="fas fa-clipboard-check"></i> MUSER Compliance</h3>
+                    <p>According to Maine Unified Special Education Regulations (MUSER IV.3.B):</p>
+                    <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
+                        <li>Goals must be measurable and include evaluation criteria</li>
+                        <li>Goals must address the child's needs resulting from disability</li>
+                        <li>Goals must enable progress in general education curriculum</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Services Section -->
+            <section id="services" class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h1 class="section-title">Special Education Services</h1>
+                </div>
+                
+                <div class="card-grid">
+                    <div>
+                        <h2>Specialized Instruction</h2>
+                        <div class="form-group">
+                            <label>Service</label>
+                            <input type="text" value="Reading Intervention">
+                        </div>
+                        <div class="form-group">
+                            <label>Frequency</label>
+                            <input type="text" value="4 times/week">
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" value="45 minutes">
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" value="Resource Room">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2>Related Services</h2>
+                        <div class="form-group">
+                            <label>Service</label>
+                            <input type="text" value="Speech Therapy">
+                        </div>
+                        <div class="form-group">
+                            <label>Frequency</label>
+                            <input type="text" value="2 times/week">
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <input type="text" value="30 minutes">
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" value="Therapy Room">
+                        </div>
+                    </div>
+                </div>
+                
+                <h2>Supplementary Aids & Services</h2>
+                <div class="form-group">
+                    <textarea rows="4">- Preferential seating
+- Extended time on tests (1.5x)
+- Access to audiobooks
+- Graphic organizers for writing assignments
+- Visual schedule</textarea>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3><i class="fas fa-clipboard-check"></i> MUSER Compliance</h3>
+                    <p>According to Maine Unified Special Education Regulations (MUSER IV.3.C):</p>
+                    <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
+                        <li>Services must be based on peer-reviewed research</li>
+                        <li>Services must be sufficient to enable progress toward goals</li>
+                        <li>Service delivery must be clearly specified</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- LRE Calculator Section -->
+            <section id="lre" class="content-section active">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div>
+                        <h1 class="section-title">Least Restrictive Environment (LRE) Calculator</h1>
+                        <p class="section-description">
+                            Calculate the percentage of time a student spends with non-disabled peers to determine appropriate placement and ensure compliance with IDEA regulations and MUSER requirements.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- MUSER Guidelines Section -->
+                <div class="muser-guidelines">
+                    <h3 class="muser-title"><i class="fas fa-book"></i> MUSER Compliance Guidelines</h3>
+                    <p>According to Maine Unified Special Education Regulations (MUSER IV.2.D.&E.):</p>
+                    <ul class="muser-list">
+                        <li>Placement decisions must be based on the student's unique needs</li>
+                        <li>Students should be educated with non-disabled peers to the maximum extent appropriate</li>
+                        <li>Removal from general education requires justification and documentation</li>
+                        <li>Schools must provide a continuum of alternative placements</li>
+                        <li>Placement decisions must be reviewed at least annually</li>
+                    </ul>
+                </div>
+                
+                <div class="calculator-container">
+                    <div class="calculator-card">
+                        <h2 class="card-title"><i class="fas fa-school"></i> K-12 LRE Calculator</h2>
+                        
+                        <div class="form-group">
+                            <label for="k12-total-mins">Total minutes in student's school week</label>
+                            <input type="number" id="k12-total-mins" placeholder="e.g., 1800" value="1800">
+                            <p class="input-hint">Total instructional minutes in a typical week (usually 1800 for 6-hour days)</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="k12-removed-mins">Minutes outside general education classroom</label>
+                            <input type="number" id="k12-removed-mins" placeholder="e.g., 300" value="300">
+                            <p class="input-hint">Time spent in special education settings, therapy, or pull-out services</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="placement-type">Current Placement Type</label>
+                            <select id="placement-type">
+                                <option value="gened">General Education Classroom</option>
+                                <option value="resource" selected>Resource Room (Partial Pull-Out)</option>
+                                <option value="selfcontained">Self-Contained Classroom</option>
+                                <option value="specialized">Specialized School</option>
+                                <option value="homebound">Homebound Instruction</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lre-notes">Placement Notes</label>
+                            <textarea id="lre-notes" placeholder="Briefly describe the student's placement...">John receives reading support in a small group for 45 minutes daily.</textarea>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="calculateLRE()">
+                            <i class="fas fa-calculator"></i> Calculate LRE Percentage
+                        </button>
+                    </div>
+                    
+                    <div class="results-card">
+                        <h2 class="results-title">LRE Calculation Results</h2>
+                        <p>Time with non-disabled peers</p>
+                        <div class="lre-percentage">83.3%</div>
+                        <div class="visualization">
+                            <div class="inclusion-bar" style="width: 83.3%"></div>
+                            <div class="bar-label inclusion-label">Inclusion</div>
+                            <div class="bar-label exclusion-label">Specialized</div>
+                        </div>
+                        <div class="lre-interpretation good">Good Inclusion</div>
+                        <p>Based on 1800 total minutes and 300 minutes in specialized settings</p>
+                    </div>
+                </div>
+                
+                <div class="compliance-section">
+                    <h2 class="compliance-title"><i class="fas fa-shield-alt"></i> Compliance Documentation</h2>
+                    
+                    <div class="compliance-card">
+                        <h3><i class="fas fa-exclamation-triangle"></i> MUSER LRE Justification Required</h3>
+                        <p>According to IDEA and Maine Unified Special Education Regulations (MUSER), the IEP team must provide justification for any removal from the general education environment. This justification must include:</p>
+                        <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
+                            <li>Why the student cannot be educated in general education with supplementary aids and services</li>
+                            <li>The alternatives considered and why they were rejected</li>
+                            <li>How the student will participate in non-academic activities</li>
+                            <li>Documentation of attempted interventions (Tier 1 and Tier 2)</li>
+                        </ul>
+                        
+                        <div class="form-group">
+                            <label for="lre-justification">LRE Justification Statement (MUSER IV.2.E)</label>
+                            <textarea id="lre-justification" rows="4">John requires specialized reading instruction in a small group setting to address decoding and fluency challenges that could not be adequately supported with in-class accommodations alone. We considered additional in-class support but determined that targeted intervention was necessary. John participates in all non-academic activities with his peers.</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="compliance-card">
+                        <h3><i class="fas fa-clipboard-check"></i> MUSER Documentation Checklist</h3>
+                        <p>Ensure these items are documented in the IEP according to MUSER requirements:</p>
+                        <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
+                            <li>LRE percentage calculation included in the IEP</li>
+                            <li>Placement decision clearly documented (MUSER IV.2.D)</li>
+                            <li>Supplementary aids and services specified</li>
+                            <li>Parent consent obtained for placement</li>
+                            <li>Referral documentation attached (if applicable)</li>
+                            <li>Intervention history documented</li>
+                        </ul>
+                        
+                        <div class="form-group">
+                            <div class="placeholder-card">
+                                <i class="fas fa-paperclip fa-2x"></i>
+                                <p>Referral for Special Education Services (2019).pdf</p>
+                                <button class="btn btn-outline">
+                                    <i class="fas fa-eye"></i> Preview Document
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save to IEP
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-download"></i> Download LRE Documentation
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="history-section">
+                    <h3><i class="fas fa-history"></i> Placement History</h3>
+                    <div class="history-grid">
+                        <div class="history-card">
+                            <h4>2023-2024</h4>
+                            <p><strong>LRE: 83.3%</strong></p>
+                            <p>General Ed with Resource Support</p>
+                            <p>Updated: 10/15/2023</p>
+                        </div>
+                        <div class="history-card">
+                            <h4>2022-2023</h4>
+                            <p><strong>LRE: 75.0%</strong></p>
+                            <p>General Ed with Resource Support</p>
+                            <p>Updated: 09/20/2022</p>
+                        </div>
+                        <div class="history-card">
+                            <h4>2021-2022</h4>
+                            <p><strong>LRE: 90.0%</strong></p>
+                            <p>General Ed with In-Class Support</p>
+                            <p>Updated: 11/05/2021</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Transition Plan Section -->
+            <section id="transition" class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h1 class="section-title">Transition Plan</h1>
+                </div>
+                
+                <div class="muser-guidelines">
+                    <h3 class="muser-title"><i class="fas fa-book"></i> MUSER Compliance Guidelines</h3>
+                    <p>According to Maine Unified Special Education Regulations (MUSER V.4):</p>
+                    <ul class="muser-list">
+                        <li>Required for students age 16 or older</li>
+                        <li>Must be based on student's strengths, preferences and interests</li>
+                        <li>Must include measurable postsecondary goals</li>
+                        <li>Must include transition services needed to reach goals</li>
+                    </ul>
+                </div>
+                
+                <div class="card-grid">
+                    <div>
+                        <h2>Postsecondary Goals</h2>
+                        <div class="form-group">
+                            <label>Education/Training</label>
+                            <textarea>After high school, John will enroll in a 2-year college program in graphic design.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Employment</label>
+                            <textarea>John will obtain part-time employment in a creative field while attending college.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Independent Living</label>
+                            <textarea>John will develop skills to live independently with minimal supports.</textarea>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2>Transition Services</h2>
+                        <div class="form-group">
+                            <label>Instruction</label>
+                            <textarea>- Career exploration in creative fields
+- College application assistance
+- Time management training</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Community Experiences</label>
+                            <textarea>- Job shadowing at design firms
+- College campus visits
+- Public transportation training</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Employment Objectives</label>
+                            <textarea>- Develop portfolio of work
+- Resume writing
+- Interview skills training</textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3><i class="fas fa-clipboard-check"></i> MUSER Compliance</h3>
+                    <p>Ensure these items are documented according to MUSER requirements:</p>
+                    <ul style="padding-left: 20px; margin: 15px 0; color: var(--gray);">
+                        <li>Postsecondary goals in education, employment, and independent living</li>
+                        <li>Annual IEP goals related to transition</li>
+                        <li>Courses of study needed to reach goals</li>
+                        <li>Student participation in planning process</li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Finalize & Audit Section -->
+            <section id="audit" class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h1 class="section-title">Finalize & Compliance Audit</h1>
+                </div>
+                
+                <div class="card-grid">
+                    <div>
+                        <h2>Compliance Checklist</h2>
+                        <div class="compliance-card">
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;">
+                                    All required sections completed
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;">
+                                    Goals are measurable and specific
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" checked style="margin-right: 10px;">
+                                    Services are clearly specified
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" style="margin-right: 10px;">
+                                    Parent consent documented
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="display: flex; align-items: center;">
+                                    <input type="checkbox" style="margin-right: 10px;">
+                                    LRE justification complete
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2>Documentation Status</h2>
+                        <div class="compliance-card">
+                            <div class="form-group">
+                                <label>Referral Documentation</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                    <span>Attached (ReferralforSpecialEducationServices2019.pdf)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Evaluation Reports</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                                    <span>Attached (PsychEval_2023.pdf, EdEval_2023.pdf)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Progress Reports</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                                    <span>Missing Q3 progress report</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Parent Consent Forms</label>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-exclamation-circle" style="color: var(--danger);"></i>
+                                    <span>Consent for placement needed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="compliance-card">
+                    <h3><i class="fas fa-shield-alt"></i> MUSER Compliance Audit</h3>
+                    <div class="form-group">
+                        <label>Overall Compliance Rating</label>
+                        <div style="background: var(--good); padding: 15px; border-radius: 8px;">
+                            <h3 style="color: #e37400;">85% Compliant</h3>
+                            <p>2 critical items missing</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Critical Missing Items</label>
+                        <ul style="padding-left: 20px; margin: 15px 0; color: var(--danger);">
+                            <li>Parent consent for placement (MUSER IV.2.F)</li>
+                            <li>Current progress monitoring data (MUSER IV.3.D)</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Generate Compliance Report
                     </button>
                     <button class="btn btn-outline">
-                        <i class="fas fa-download"></i> Download LRE Documentation
+                        <i class="fas fa-paper-plane"></i> Submit for Review
                     </button>
                 </div>
-            </div>
-            
-            <div class="history-section">
-                <h3><i class="fas fa-history"></i> Placement History</h3>
-                <div class="history-grid">
-                    <div class="history-card">
-                        <h4>2023-2024</h4>
-                        <p><strong>LRE: 83.3%</strong></p>
-                        <p>General Ed with Resource Support</p>
-                        <p>Updated: 10/15/2023</p>
-                    </div>
-                    <div class="history-card">
-                        <h4>2022-2023</h4>
-                        <p><strong>LRE: 75.0%</strong></p>
-                        <p>General Ed with Resource Support</p>
-                        <p>Updated: 09/20/2022</p>
-                    </div>
-                    <div class="history-card">
-                        <h4>2021-2022</h4>
-                        <p><strong>LRE: 90.0%</strong></p>
-                        <p>General Ed with In-Class Support</p>
-                        <p>Updated: 11/05/2021</p>
-                    </div>
-                </div>
-            </div>
+            </section>
         </main>
     </div>
 
     <script>
+        // Section navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.content-section');
+            const currentSectionName = document.getElementById('current-section-name');
+            
+            // Function to show a section
+            function showSection(sectionId) {
+                // Hide all sections
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the selected section
+                const activeSection = document.getElementById(sectionId);
+                if (activeSection) {
+                    activeSection.classList.add('active');
+                    
+                    // Update current section name in sidebar
+                    const activeButton = document.querySelector(`.nav-btn[data-section="${sectionId}"]`);
+                    if (activeButton) {
+                        currentSectionName.textContent = activeButton.textContent.trim();
+                    }
+                }
+                
+                // Update active button
+                navButtons.forEach(button => {
+                    button.classList.remove('active');
+                    if (button.getAttribute('data-section') === sectionId) {
+                        button.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add click event listeners to navigation buttons
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const sectionId = this.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+            
+            // Initialize with LRE section active
+            showSection('lre');
+        });
+        
+        // LRE Calculator Functionality
         function calculateLRE() {
             const total = parseFloat(document.getElementById('k12-total-mins').value);
             const removed = parseFloat(document.getElementById('k12-removed-mins').value);
             const resultsCard = document.querySelector('.results-card');
-            const complianceSection = document.querySelector('.compliance-section');
             
             if (!total || !removed || removed > total) {
                 alert("Please enter valid numbers. Total minutes should be greater than removed minutes.");
@@ -748,20 +1330,12 @@
                 <div class="lre-interpretation ${interpretationClass}">${interpretationText}</div>
                 <p>Based on ${total} total minutes and ${removed} minutes in specialized settings</p>
             `;
-            
-            // Show compliance section if needed
-            if (percentage < 100) {
-                complianceSection.style.display = 'block';
-            } else {
-                complianceSection.style.display = 'none';
-            }
         }
         
         // Initialize with sample data for demo
         window.onload = function() {
             document.getElementById('k12-total-mins').value = 1800;
             document.getElementById('k12-removed-mins').value = 300;
-            calculateLRE();
         }
     </script>
 </body>
